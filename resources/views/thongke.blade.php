@@ -24,7 +24,24 @@
     <link rel="stylesheet" href="{{asset('app/assets/scss/style.css')}}">
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
-
+    <style type="text/css">
+        #form-insert .form-group{
+            margin-right: 30px;
+        }
+        #card-header-table .card-title{
+            float:left;
+            margin:0px;
+            margin-top: 6px;
+        }
+        #form-select{
+            margin:0px;
+        }
+        #form-select label{
+            margin-bottom: 0px;
+            margin-top: 6px;
+            float:left;
+        }
+    </style>
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
 
 </head>
@@ -45,7 +62,7 @@
             <div id="main-menu" class="main-menu collapse navbar-collapse">
                 <ul class="nav navbar-nav">
                     <li>
-                        <a href="index.html"> <i class="menu-icon fa fa-dashboard"></i>Thống Kê </a>
+                        <a href="{{route('getDashBoard')}}"> <i class="menu-icon fa fa-dashboard"></i>Thống Kê </a>
                     </li>
                     
                 </ul>
@@ -216,18 +233,19 @@
                             <strong>Thêm</strong> 
                         </div>
                         <div class="card-body card-block">
-                            <form action="" method="post" class="form-inline">
+                            <form action="" method="post" class="form-inline" id="form-insert">
+                                <meta name="csrf-token" content="{{ csrf_token() }}" />
                               <div class="form-group"><label for="exampleInputName2" class="pr-1  form-control-label">Tên</label><input type="text" id="input-name" placeholder="Nam Tinh Vi" required="" class="form-control"></div>
                               <div class="form-group">
                                 <label for="exampleInputEmail2" class="px-1  form-control-label">Mệnh Giá</label>
                                 <select name="selectPrice" id="selectPrice" class="form-control">
-                                    <option value="0">500K VNĐ</option>
-                                    <option value="1">300K VNĐ</option>
-                                    <option value="2">1000K VNĐ</option>
-                                    <option value="3">2000K VNĐ</option>
-                                    <option value="4">3000K VNĐ</option>
-                                    <option value="5">5000K VNĐ</option>
-                                    <option value="6">10TR VNĐ</option>
+                                    <option value="0">5 Trăm VNĐ</option>
+                                    <option value="1">3 Trăm VNĐ</option>
+                                    <option value="2">1 Triệu VNĐ</option>
+                                    <option value="3">2 Triệu VNĐ</option>
+                                    <option value="4">3 Triệu VNĐ</option>
+                                    <option value="5">5 Triệu VNĐ</option>
+                                    <option value="6">10 Triệu VNĐ</option>
                                     <option value="7">... khác</option>
                                     <option value="8">$</option>
                                 </select>
@@ -289,8 +307,22 @@
 
                 <div class="col-md-12">
                     <div class="card">
-                        <div class="card-header">
-                            <strong class="card-title">Bảng Thống Kê</strong>
+                        <div class="card-header" id="card-header-table">
+                            <strong class="card-title col-md-3">Bảng Thống Kê</strong>
+                            <div class="form-group col-md-6" id="form-select">
+                                <label for="exampleInputEmail2" class="px-1  form-control-label col-md-4">Thống Kê Theo <strong>Quan Hệ</strong></label>
+                                <select name="selectFilter" id="selectFilter" class="form-control col-md-8">
+                                    <option value="all">Tất cả</option>
+                                    <option value="0">Biên Phòng</option>
+                                    <option value="1">Họ Hàng</option>
+                                    <option value="2">Hàng Xóm</option>
+                                    <option value="3">Doanh Nghiệp</option>
+                                    <option value="4">Bạn bè Bố</option>
+                                    <option value="5">Bạn bè Mẹ</option>
+                                    <option value="6">Khác...</option>
+                                </select>
+                            </div>
+                            <button class="btn btn-primary col-md-3">Xuất Exel</button>
                         </div>
                         <div class="card-body">
                   <table id="bootstrap-data-table" class="table table-striped table-bordered">
@@ -300,15 +332,25 @@
                         <th>Tên</th>
                         <th>Cơ Quan</th>
                         <th>Mệnh Giá</th>
+                        <th>Xóa</th>
+
                       </tr>
                     </thead>
-                    <tbody>
+                    <tbody id="content-table">
+                        @php
+                        $organs = ['Đồn Hữu Nghị','Đồn Tân Thanh','Đồn Bình Nghi','Đồn Na Hình','Đồn Pò Mã','Đồn Chi Ma','Đồn Chi Lăng','Đồn Ba Sơn','Đồn Bắc Sa','Đồn Bảo Lâm','Đồn Thanh Lòa','Bộ chỉ Huy LS','Bộ Tư Lệnh','Học Viện Biên Phòng','Khác...'];
+                        $relations = ['Biên Phòng','Họ Hàng','Hàng Xóm','Doanh Nghiệp','Bạn bè Bố','Bạn bè Mẹ','Khác...'];
+                        $prices = ['5 Trăm VNĐ','3 Trăm VNĐ','1 Triệu VNĐ','2 Triệu VNĐ','3 Triệu VNĐ','5 Triệu VNĐ','10 Triệu VNĐ','... khác','$'];
+                        @endphp
+                        @foreach($records as $record)
                       <tr>
-                        <td>Tiger Nixon</td>
-                        <td>System Architect</td>
-                        <td>Edinburgh</td>
-                        <td>$320,800</td>
+                        <td>{{$record->id}}</td>
+                        <td>{{$record->name}}</td>
+                        <td>{{$relations[$record->relation]}} @if($record->relation == 0)- {{$organs[$record->organ - 1] }}@endif</td>
+                        <td>{{$prices[$record->price]}}</td>
+                        <td><button class="btn btn-success btn-delete" onclick="deleteRecord('{{$record->id}}')"  >Xóa</button></td>
                       </tr>
+                      @endforeach
                       
                     </tbody>
                   </table>
@@ -344,9 +386,16 @@
     <script src="{{asset('app/assets/js/lib/data-table/buttons.print.min.js')}}"></script>
     <script src="{{asset('app/assets/js/lib/data-table/buttons.colVis.min.js')}}"></script>
     <script src="{{asset('app/assets/js/lib/data-table/datatables-init.js')}}"></script>
+    <script src="{{asset('js/vendor/jquery.bootstrap-growl.min.js')}}"></script>
 
-
+    
     <script type="text/javascript">
+        var records = <?php echo  json_encode($records) ;?>;
+        var organs = <?php echo  json_encode($organs) ;?>;
+        var relations = <?php echo  json_encode($relations) ;?>;
+        var prices = <?php echo  json_encode($prices) ;?>;
+        var htmlAll = $('#content-table').html();
+
         $(document).ready(function() {
             if($("#selectRelation").val() == 0){
                 $("#input-organ").show();
@@ -355,14 +404,37 @@
           $('#bootstrap-data-table-export').DataTable();
 
           $('#btn-submit').on('click',function(){
-            console.log($('#input-name').text());
             if($('#input-name').val() == ""){
-                console.log('Error!!! required name');
+                messageResponce("Lỗi trường trống! Vui lòng điền tên! ",'error');
             }else{
                 if($("#selectRelation").val() == 0 && $('#selectOrgan').val() == 0){
-                    console.log("Error!!! None select");
+                    messageResponce("Lỗi chọn! Vui lòng chọn Cơ Quan!",'error');
                 }else{
-                    console.log('Be able to save');
+
+                    var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+                    var name = $('#input-name').val();
+                    var price = $('#selectPrice').val();
+                    var relation = $('#selectRelation').val();
+                    var organ = ($("#selectRelation").val() == 0)?$('#selectOrgan').val():"";
+                    var href = window.location.origin;
+                    jQuery.ajax({
+                        url: href+'/insert',
+                        method:'post',
+                        data: {
+                            _token: CSRF_TOKEN,
+                            name:name,
+                            price:price,
+                            relation:relation,
+                            organ:organ
+                        },
+                        dataType: 'JSON',
+                        success:function(res){
+                            messageResponce(res.message,'success');
+                            setTimeout(function() {
+                                location.reload()
+                            },1000);
+                        }
+                    });
                 }
             }
           });
@@ -373,7 +445,93 @@
                 $("#input-organ").hide();
               }
           });
+
+          $("#selectFilter").change(function(){
+                var keyOrgan = $("#selectFilter").val();
+                var html= getHtmlContentAfterFilter(keyOrgan);
+                $('#content-table').html(html);
+
+            });
+          $('.dataTables_filter input').keyup(function(){
+            $("#selectFilter").val('all');
+          });
+
+
+          
         } );
+
+        function getHtmlContentAfterFilter(keyOrgan){
+            var html = "";
+            if(keyOrgan == "all"){
+                html = htmlAll;
+            }else{
+
+                 $.each(records,function(key, value){
+
+                    if(value.relation == keyOrgan){
+                        var organItem = (value.relation == 0)?(" - "+organs[value.organ-1]):"";
+                        html +="<tr><td>"+value.id+"</td>";
+                        html +="<td>"+value.name+"</td>";
+                        html +="<td>"+relations[value.relation]+organItem+"</td>";
+                        html +="<td>"+prices[value.price]+"</td>";
+                        html +="<td><button class='btn btn-success btn-delete' onclick='deleteRecord("+value.id+")'>Xóa</button></td></tr>";
+                    }
+                    
+                });
+            }
+            return html;
+        }
+
+
+        function deleteRecord(id){
+            var CSRF_TOKEN = $('meta[name="csrf-token"]').attr('content');
+            var href = window.location.origin;
+            jQuery.ajax({
+                url: href+'/delete',
+                method:'post',
+                data: {
+                    _token: CSRF_TOKEN,
+                    id:id
+                },
+                dataType: 'JSON',
+                success:function(res){
+                    messageResponce(res.message,'success');
+                    setTimeout(function() {
+                        location.reload()
+                    },1000);
+                }
+            });
+        }
+
+
+        
+        function messageResponce(message,type){
+            if(type == 'error'){
+                $.bootstrapGrowl(message, {
+                    type: 'danger',
+                    align: 'center',
+                    width: 'auto',
+                    allow_dismiss: false
+                });
+            }else if(type == 'info'){
+                $.bootstrapGrowl(message, {
+                    type: 'info',
+                    align: 'center',
+                    width: 'auto',
+                    allow_dismiss: false
+                });
+            }else if(type == 'success'){
+                    $.bootstrapGrowl(message, {
+                        type: 'success',
+                        align: 'center',
+                        width: 'auto',
+                        allow_dismiss: false
+                    });
+
+            }
+            
+        }
+         
     </script>
 
 
