@@ -38,4 +38,10 @@ class InsertController extends Controller
     	$record->delete();
     	return ['message'=>'Xóa thành công!'];
     }
+    public function getMaster(){
+        return view('master');
+    }
+     public function getOverview(){
+        return view('overview');
+    }
 }

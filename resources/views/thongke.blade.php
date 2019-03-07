@@ -259,7 +259,8 @@
                                     <option value="3">Doanh Nghiệp</option>
                                     <option value="4">Bạn bè Bố</option>
                                     <option value="5">Bạn bè Mẹ</option>
-                                    <option value="6">Khác...</option>
+                                    <option value="6">Bạn bè Dũng</option>
+                                    <option value="7">Khác...</option>
                                 </select>
                             </div>
                             <div class="form-group" style="display: none;" id="input-organ">
@@ -319,7 +320,8 @@
                                     <option value="3">Doanh Nghiệp</option>
                                     <option value="4">Bạn bè Bố</option>
                                     <option value="5">Bạn bè Mẹ</option>
-                                    <option value="6">Khác...</option>
+                                    <option value="6">Bạn bè Dũng</option>
+                                    <option value="7">Khác...</option>
                                 </select>
                             </div>
                             <button class="btn btn-primary col-md-3">Xuất Exel</button>
