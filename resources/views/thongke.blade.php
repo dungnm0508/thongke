@@ -26,7 +26,7 @@
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
     <style type="text/css">
         #form-insert .form-group{
-            margin-right: 30px;
+            margin-right: 10px;
         }
         #card-header-table .card-title{
             float:left;
@@ -38,7 +38,7 @@
         }
         #form-select label{
             margin-bottom: 0px;
-            margin-top: 6px;
+            /*margin-top: 6px;*/
             float:left;
         }
     </style>
@@ -259,7 +259,8 @@
                                     <option value="3">Doanh Nghiệp</option>
                                     <option value="4">Bạn bè Bố</option>
                                     <option value="5">Bạn bè Mẹ</option>
-                                    <option value="6">Khác...</option>
+                                    <option value="6">Bạn bè Dũng</option>
+                                    <option value="7">Khác...</option>
                                 </select>
                             </div>
                             <div class="form-group" style="display: none;" id="input-organ">
@@ -319,7 +320,8 @@
                                     <option value="3">Doanh Nghiệp</option>
                                     <option value="4">Bạn bè Bố</option>
                                     <option value="5">Bạn bè Mẹ</option>
-                                    <option value="6">Khác...</option>
+                                    <option value="6">Bạn bè Dũng</option>
+                                    <option value="7">Khác...</option>
                                 </select>
                             </div>
                             <button class="btn btn-primary col-md-3">Xuất Exel</button>
@@ -339,7 +341,7 @@
                     <tbody id="content-table">
                         @php
                         $organs = ['Đồn Hữu Nghị','Đồn Tân Thanh','Đồn Bình Nghi','Đồn Na Hình','Đồn Pò Mã','Đồn Chi Ma','Đồn Chi Lăng','Đồn Ba Sơn','Đồn Bắc Sa','Đồn Bảo Lâm','Đồn Thanh Lòa','Bộ chỉ Huy LS','Bộ Tư Lệnh','Học Viện Biên Phòng','Khác...'];
-                        $relations = ['Biên Phòng','Họ Hàng','Hàng Xóm','Doanh Nghiệp','Bạn bè Bố','Bạn bè Mẹ','Khác...'];
+                        $relations = ['Biên Phòng','Họ Hàng','Hàng Xóm','Doanh Nghiệp','Bạn bè Bố','Bạn bè Mẹ','Bạn Bè Dũng','Khác...'];
                         $prices = ['5 Trăm VNĐ','3 Trăm VNĐ','1 Triệu VNĐ','2 Triệu VNĐ','3 Triệu VNĐ','5 Triệu VNĐ','10 Triệu VNĐ','... khác','$'];
                         @endphp
                         @foreach($records as $record)
@@ -432,7 +434,7 @@
                             messageResponce(res.message,'success');
                             setTimeout(function() {
                                 location.reload()
-                            },1000);
+                            },500);
                         }
                     });
                 }
@@ -498,7 +500,7 @@
                     messageResponce(res.message,'success');
                     setTimeout(function() {
                         location.reload()
-                    },1000);
+                    },500);
                 }
             });
         }
