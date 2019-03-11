@@ -25,6 +25,12 @@
 .bg-flat-color-5 {
   background: #4dbd74; }
 
+.bg-flat-color-6 {
+  background: #bd2130; }
+
+.bg-flat-color-7 {
+  background: #878787; }
+
 .transition {
   -webkit-transition: all 0.3s ease;
   -moz-transition: all 0.3s ease;
