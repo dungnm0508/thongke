@@ -14,7 +14,7 @@
     <link rel="shortcut icon" href="favicon.ico">
 
    
-
+    
     <link rel="stylesheet" href="{{asset('app/assets/css/normalize.css')}}">
     <link rel="stylesheet" href="{{asset('app/assets/css/bootstrap.min.css')}}">
     <link rel="stylesheet" href="{{asset('app/assets/css/font-awesome.min.css')}}">
@@ -26,6 +26,7 @@
     <link href="{{asset('app/assets/css/lib/vector-map/jqvmap.min.css')}}" rel="stylesheet">
 
     <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,600,700,800' rel='stylesheet' type='text/css'>
+    @yield('css')
 
     <!-- <script type="text/javascript" src="https://cdn.jsdelivr.net/html5shiv/3.7.3/html5shiv.min.js"></script> -->
 
@@ -55,15 +56,15 @@
                     <li class="menu-item-has-children dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="menu-icon fa fa-laptop"></i>Thống Kê Theo Quan Hệ</a>
                         <ul class="sub-menu children dropdown-menu">
-                            <li><i class="fa fa-puzzle-piece"></i><a href="ui-buttons.html">Tổng Quan</a></li>
-                            <li><i class="fa fa-id-badge"></i><a href="ui-badges.html">Biên Phòng</a></li>
-                            <li><i class="fa fa-bars"></i><a href="ui-tabs.html">Họ Hàng</a></li>
-                            <li><i class="fa fa-share-square-o"></i><a href="ui-social-buttons.html">Hàng Xóm</a></li>
-                            <li><i class="fa fa-book"></i><a href="ui-switches.html">Doanh Nghiệp</a></li>
-                            <li><i class="fa fa-id-card-o"></i><a href="ui-cards.html">Bạn bè Bố</a></li>
-                            <li><i class="fa fa-exclamation-triangle"></i><a href="ui-alerts.html">Bạn bè Mẹ</a></li>
-                            <li><i class="fa fa-spinner"></i><a href="ui-progressbar.html">Bạn bè Dũng</a></li>
-                            <li><i class="fa fa-fire"></i><a href="ui-modals.html">Khác...</a></li>
+                            <li><i class="fa fa-puzzle-piece"></i><a href="{{route('getOverview')}}">Tổng Quan</a></li>
+                            <li><i class="fa fa-id-badge"></i><a href="{{route('getListBienPhong')}}">Biên Phòng</a></li>
+                            <li><i class="fa fa-bars"></i><a href="{{route('getListHoHang')}}">Họ Hàng</a></li>
+                            <li><i class="fa fa-share-square-o"></i><a href="{{route('getListHangXom')}}">Hàng Xóm</a></li>
+                            <li><i class="fa fa-book"></i><a href="{{route('getListDoanhNghiep')}}">Doanh Nghiệp</a></li>
+                            <li><i class="fa fa-id-card-o"></i><a href="{{route('getListBanBeBo')}}">Bạn bè Bố</a></li>
+                            <li><i class="fa fa-exclamation-triangle"></i><a href="{{route('getListBanBeMe')}}">Bạn bè Mẹ</a></li>
+                            <li><i class="fa fa-spinner"></i><a href="{{route('getListBanBeDung')}}">Bạn bè Dũng</a></li>
+                            <li><i class="fa fa-fire"></i><a href="{{route('getListKhac')}}">Khác...</a></li>
                             
                         </ul>
                     </li>
@@ -276,6 +277,6 @@
         //     } );
         // } )( jQuery );
     </script>
-
+     @yield('script')
 </body>
 </html>
