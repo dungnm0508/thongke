@@ -240,6 +240,71 @@
             </div>
         </div>
 
+        <div class="col-lg-4 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="stat-widget-one">
+                        <div class="stat-icon dib"><i class="ti-user text-primary border-primary"></i></div>
+                        <div class="stat-content dib">
+                            <div class="stat-text">Tổng Khách</div>
+                            <div class="stat-digit">{{count($records)}}</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-4 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="stat-widget-one">
+                        <div class="stat-icon dib"><i class="ti-money text-success border-success"></i></div>
+                        <div class="stat-content dib">
+                            <div class="stat-text">Tổng Thu (VNĐ)</div>
+                            <div class="stat-digit" id="total-vnd">{{$revenue['total_revenue_vn']}}000 VNĐ</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+
+        <div class="col-lg-4 col-md-6">
+            <div class="card">
+                <div class="card-body">
+                    <div class="stat-widget-one">
+                        <div class="stat-icon dib"><i class="ti-layout-grid2 text-warning border-warning"></i></div>
+                        <div class="stat-content dib">
+                            <div class="stat-text">Tổng Thu ($)</div>
+                            <div class="stat-digit">{{$revenue['total_revenue_dollar']}} $</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="mb-3">Biểu Đồ Quan Hệ</h4>
+                    <div class="flot-container">
+                        <div id="flot-pie" class="flot-pie-container">
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /# card -->
+        </div><!-- /# column -->
+         <div class="col-lg-6">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="mb-3">Biểu Đồ Mệnh Giá</h4>
+                    <div class="flot-container">
+                        <div id="flot-pie2" class="flot-pie-container">
+                        </div>
+                    </div>
+                </div>
+            </div><!-- /# card -->
+        </div><!-- /# column -->
         <div class="content mt-3">
             <div class="animated fadeIn">
                 <div class="row">
@@ -317,6 +382,7 @@
   </div>
 
 </div>
+
 
         <div class="content mt-3">
             <div class="animated fadeIn">
@@ -405,6 +471,15 @@
     <script src="{{asset('app/assets/js/lib/data-table/buttons.colVis.min.js')}}"></script>
     <script src="{{asset('app/assets/js/lib/data-table/datatables-init.js')}}"></script>
     <script src="{{asset('js/vendor/jquery.bootstrap-growl.min.js')}}"></script>
+    <script src="{{asset('app/assets/js/lib/flot-chart/jquery.flot.js')}}"></script>
+    <script src="{{asset('app/assets/js/lib/flot-chart/jquery.flot.pie.js')}}"></script>
+    <!-- <script src="{{asset('app/assets/js/lib/flot-chart/jquery.flot.time.js')}}"></script> -->
+    <!-- <script src="{{asset('app/assets/js/lib/flot-chart/jquery.flot.stack.js')}}"></script> -->
+    <!-- <script src="{{asset('app/assets/js/lib/flot-chart/jquery.flot.resize.js')}}"></script> -->
+    <!-- <script src="{{asset('app/assets/js/lib/flot-chart/jquery.flot.crosshair.js')}}"></script> -->
+    <!-- <script src="{{asset('app/assets/js/lib/flot-chart/curvedLines.js')}}"></script> -->
+    <script src="{{asset('app/assets/js/lib/flot-chart/flot-tooltip/jquery.flot.tooltip.min.js')}}"></script>
+    <!-- <script src="{{asset('app/assets/js/lib/flot-chart/flot-chart-init.js')}}"></script> -->
 
     
     <script type="text/javascript">
@@ -412,8 +487,10 @@
         var organs = <?php echo  json_encode($organs) ;?>;
         var relations = <?php echo  json_encode($relations) ;?>;
         var prices = <?php echo  json_encode($prices) ;?>;
+        var numOfRelation = <?php echo  json_encode($num_of_relation) ;?>;
+        var numOfPrice = <?php echo  json_encode($num_of_prices) ;?>;
         var htmlAll = $('#content-table').html();
-
+        console.log(numOfPrice);
         $(document).ready(function() {
             if($("#selectRelation").val() == 0){
                 $("#input-organ").show();
@@ -472,8 +549,15 @@
             });
           $('.dataTables_filter input').keyup(function(){
             $("#selectFilter").val('all');
-          });
+        });
 
+          var totalVnd = parseInt($('#total-vnd').text());
+          var num = '$' + totalVnd.toFixed(0).replace(/(\d)(?=(\d\d\d)+(?!\d))/g, "$1,");
+
+          $('#total-vnd').text(num + "VNĐ");
+
+          addPieChart(numOfRelation,'#flot-pie');
+          addPieChart(numOfPrice,'#flot-pie2');
 
           
         } );
@@ -498,6 +582,92 @@
                 });
             }
             return html;
+        }
+        function getRandomColor() {
+          var letters = '0123456789ABCDEF';
+          var color = '#';
+          for (var i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }   
+
+        function addPieChart(input,el){
+
+            var data = [
+            {
+                label: input[0].label,
+                data: input[0].num,
+                color: "#DC3545"
+            },
+            {
+                label: input[1].label,
+               data: input[1].num,
+                color: "#33CC33"
+            },
+            {
+                label: input[2].label,
+                data: input[2].num,
+                color: "#FFFF33"
+            },
+            {
+                label: input[3].label,
+                data: input[3].num,
+                color: "#663366" 
+            },
+            {
+                 label: input[4].label,
+                data: input[4].num,
+                color: '#880000' 
+            },
+            {
+                 label: input[5].label,
+                data: input[5].num,
+                color: "#CC6600" 
+            },
+            {
+                 label: input[6].label,
+                data: input[6].num,
+                color: "#19A9D5"
+            },
+            {
+                label: input[7].label,
+                data: input[7].num,
+                color: "#8fc9fb"
+            }
+            ];
+            if(input.length >8){
+                data.push({
+                    label: input[8].label,
+                    data: input[8].num,
+                    color: "#FF6666" 
+                });
+            }
+
+            var plotObj = $.plot( $(el), data, {
+                series: {
+                    pie: {
+                        show: true,
+                        radius: 1,
+                        label: {
+                            show: false,
+
+                        }
+                    }
+                },
+                grid: {
+                    hoverable: true
+                },
+                tooltip: {
+                    show: true,
+                    content: "%p.0%, %s, n=%n", 
+                    shifts: {
+                        x: 20,
+                        y: 0
+                    },
+                    defaultTheme: false
+                }
+            } );
         }
 
 
@@ -547,9 +717,11 @@
                     });
 
             }
+
             
         }
          
+        
     </script>
 
 

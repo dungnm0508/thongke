@@ -14,7 +14,53 @@ class InsertController extends Controller
     
     public function getRecord(){
     	$records = Record::all();
-    	return view('thongke',compact('records'));
+        $prices = [500,300,1000,2000,3000,5000,10000,20000,'$'];
+        $relations = ['Biên Phòng','Họ Hàng','Hàng Xóm','Doanh Nghiệp','Bạn bè Bố','Bạn bè Mẹ','Bạn bè Dũng','Khác...'];
+
+        $total_revenue_vn = 0;
+        $total_revenue_dollar = 0;
+
+
+        $num_of_relation = [];
+        foreach ($relations as $key => $relation) {
+            $item = [];
+            $records2 = Record::where('relation','=',$key)->get();
+            $item['label'] = $relation;
+            $item['num'] = count($records2);
+            $num_of_relation[] = $item;
+        }
+        $total_records = count($records);
+
+
+        $num_of_prices = [];
+        foreach ($prices as $key => $price) {
+            $item1 = [];
+            $records1 = Record::where('price','=',$key)->get();
+            $item['label'] = $price;
+            $item['num'] = count($records1);
+            $num_of_prices[] = $item;
+            if($key<8){
+
+                $num = count($records1) * $prices[$key];
+                $total_revenue_vn += $num ;
+            }else{
+                foreach ($records1 as $key => $record) {
+                    $total_revenue_dollar += $record['dollar'];
+                }
+                
+            }
+        }
+
+
+        $revenue = [
+            "total_revenue_vn" => $total_revenue_vn,
+            "total_revenue_dollar" => $total_revenue_dollar
+        ];
+        
+
+        // return $revenue;
+
+    	return view('thongke',compact('records','revenue','num_of_relation','num_of_prices'));
     }
     public function postInsertRecord(Request $request){
     	try{
@@ -87,23 +133,35 @@ class InsertController extends Controller
 
     public function getTestCsv(){
         $records = Record::where('relation','=',0)->get();
-        $data = array(
-         array(1, 2, 4),
-         array('test string', 'test, literal, comma', 'test literal "quotes"'),
-     );
-         $this->generateCsv($data);
+        $array_of_data = Array(
+            Array(1,
+                'Dave',
+                'Smith',
+                'dave[at]dave.com'
+            ),
+            Array(2,
+                'Sam',
+                'Adams',
+                'sam[@]adams.com'
+            ),
+            Array(3,
+                'Gary',
+                'Davis',
+                'gary[at]davis.com'
+            )
+        );
+        $this->convert_to_csv(json_decode($records,true), 'data_as_csv.csv', ',');
     }
-    public function generateCsv($data, $delimiter = ',', $enclosure = '"') {
-        // var_dump($data);die;
-       $handle = fopen('php://temp', 'r+');
-       foreach ($data as $line) {
-               fputcsv($handle, $line, $delimiter, $enclosure);
-       }
-       rewind($handle);
-       while (!feof($handle)) {
-               $contents .= fread($handle, 8192);
-       }
-       fclose($handle);
-       return $contents;
+    public function convert_to_csv($input_array, $output_file_name, $delimiter)
+    {
+        $temp_memory = fopen('php://memory', 'w');
+        foreach ($input_array as $line) {
+            fputcsv($temp_memory, $line, $delimiter);
+        }
+
+        fseek($temp_memory, 0);
+        header('Content-Type: application/csv');
+        header('Content-Disposition: attachement; filename="' . $output_file_name . '";');
+        fpassthru($temp_memory);
     }
 }
