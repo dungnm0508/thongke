@@ -90,6 +90,7 @@ class InsertController extends Controller
     }
      public function getOverview(){
         $relations = ['Biên Phòng','Họ Hàng','Hàng Xóm','Doanh Nghiệp','Bạn bè Bố','Bạn bè Mẹ','Bạn bè Dũng','Khác...'];
+
         $num_of_relation = [];
         foreach ($relations as $key => $relation) {
             $records = Record::where('relation','=',$key)->get();
@@ -99,8 +100,42 @@ class InsertController extends Controller
         return view('overview',compact('num_of_relation','total_records'));
     }
     public function getListBienPhong(){
+        $organs = ['Đồn Hữu Nghị','Đồn Tân Thanh','Đồn Bình Nghi','Đồn Na Hình','Đồn Pò Mã','Đồn Chi Ma','Đồn Chi Lăng','Đồn Ba Sơn','Đồn Bắc Sa','Đồn Bảo Lâm','Đồn Thanh Lòa','Bộ chỉ Huy LS','Bộ Tư Lệnh','Học Viện Biên Phòng','Khác...'];
+        $prices = [500,300,1000,2000,3000,5000,10000,20000,'$'];
+
+        $total_revenue_vn = 0;
+        $total_revenue_dollar = 0;
+        foreach ($prices as $key => $price) {
+            $item1 = [];
+            $records1 = Record::where('price','=',$key)->where('relation','=',0)->get();
+            $item['label'] = $price;
+            $item['num'] = count($records1);
+            $num_of_prices[] = $item;
+            if($key<8){
+
+                $num = count($records1) * $prices[$key];
+                $total_revenue_vn += $num ;
+            }else{
+                foreach ($records1 as $key => $record) {
+                    $total_revenue_dollar += $record['dollar'];
+                }
+                
+            }
+        }
+
+        $data_each_organ = [];
+        foreach ($organs as $key => $organ) {
+            $id = $key+1;
+            $record_organ =  Record::where('organ','=',$id)->where('relation','=',0)->get();
+            $data_each_organ[$key] = $record_organ;
+        }
+       
+        $revenue = [
+            "total_revenue_vn" => $total_revenue_vn,
+            "total_revenue_dollar" => $total_revenue_dollar
+        ];
         $records = Record::where('relation','=',0)->get();
-        return view('relation/bienphong',compact('records'));
+        return view('relation/bienphong',compact('records','revenue','data_each_organ'));
     }
     public function getListHoHang(){
         $records = Record::where('relation','=',1)->get();
