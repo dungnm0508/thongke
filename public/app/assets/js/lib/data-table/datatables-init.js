@@ -11,6 +11,12 @@
     $('#bootstrap-data-table').DataTable({
         lengthMenu: [[10, 20, 50, -1], [10, 20, 50, "All"]],
     });
+    for (var i = 0; i<15; i++) {
+    	console.log('#bootstrap-data-table'+i);
+    	$('#bootstrap-data-table'+i).DataTable({
+    		lengthMenu: [[10, 20, 50, -1], [10, 20, 50, "All"]],
+    	});
+    }
     
 
 

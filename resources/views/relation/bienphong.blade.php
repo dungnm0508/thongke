@@ -128,7 +128,7 @@ $prices = ['5 Trăm VNĐ','3 Trăm VNĐ','1 Triệu VNĐ','2 Triệu VNĐ','3 Tr
 						</div>
 						@foreach($tabs_id as $key1=>$tab1)
 						<div class="tab-pane fade" id="{{substr($tab1,0,-4)}}" role="tabpanel" aria-labelledby="{{$tab1}}">
-							<table id="bootstrap-data-table" class="table table-striped table-bordered">
+							<table id="bootstrap-data-table{{$key1}}" class="table table-striped table-bordered">
 								<thead>
 									<tr>
 										<th>ID</th>
